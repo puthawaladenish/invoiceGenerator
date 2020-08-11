@@ -4,6 +4,7 @@ const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 //static web server
 app.use(express.static(path.join(__dirname,'dist')));
@@ -22,6 +23,7 @@ mongoose.connection.once('open',() => {
 });
 
 //body-parser
+app.use(cors());
 app.use(bodyParser.urlencoded({extended : false}));
 app.use(bodyParser.json());
 
@@ -41,6 +43,6 @@ app.get('*',(req,res) => {
 
 
 //port
-app.listen(3000,()=>{
+app.listen(5000,()=>{
     console.log('Listening at localhost : 3000')
 });
