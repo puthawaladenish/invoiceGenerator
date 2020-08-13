@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import { render } from 'react-dom';
+//import { render } from 'react-dom';
 import LoadHomepage from './component/LoadHomepage';
 import LoadCreateInvoice from './component/LoadCreateInvoice';
 import LoadUpdateInvoice from './component/LoadUpdateInvoice';

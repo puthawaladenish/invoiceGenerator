@@ -8,11 +8,14 @@ export default class CustomTextField extends React.Component {
     render() {
         return (
             <Form.Group>
-                <Form.Label controlId = {this.props.customId}>
-                <h5>{this.props.label}</h5>
+                <Form.Label controlid = {this.props.customId}>
+                <h5>
+                    {this.props.label}
+                </h5>
                 </Form.Label>
                 <Form.Control
                        type = 'text'
+                       name = {this.props.name}
                        placeholder = {this.props.placeholder}
                        value = {this.props.val}
                        onChange={this.props.inputHandler}>                   
