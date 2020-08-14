@@ -4,6 +4,7 @@ import CustomTextArea from './CustomTextArea';
 import ProductAndPrices from './ProductAndpricesListing';
 import FinalPrice from './FinalPrice';
 import DesriptionAndPrice from './InputDescriptionAndPrice';
+import Button from 'react-bootstrap/Button';
 
 export default class Layout extends React.Component {
     constructor(props) {
@@ -15,11 +16,7 @@ export default class Layout extends React.Component {
             customerAddress: '',
             invoiceDescription: '',
             termsAndConditions: '',
-            itemsListing: [
-                {description : 'Green skirt', price: 250 },
-                {description : 'Red Skirt', price: 350 },
-                {description : 'Blue skirt', price: 450 }                
-            ],
+            itemsListing: [],
             descriptionVal:'',
             priceVal:''
 
@@ -33,12 +30,12 @@ export default class Layout extends React.Component {
             return{
                 itemsListing : currentArray.concat([
                     {
-                        description:state.decriptionVal,
+                        description:state.descriptionVal,
                         price: parseFloat(state.priceVal)
                     }
                 ])
             }
-        })
+        });
         console.log('You want to add an item to the listing ')
     }
     textFieldHandler(event) {
@@ -138,7 +135,8 @@ export default class Layout extends React.Component {
                 <DesriptionAndPrice 
                     descriptionVal={this.state.descriptionVal}
                     priceVal={this.state.priceVal}
-                    customHandler={this.textFieldHandler}  />
+                    customHandler={this.textFieldHandler}
+                    buttonHandler= {this.buttonClick}  />
                 <FinalPrice 
                     itemsListing = {this.state.itemsListing} />
                 <CustomTextArea
@@ -147,6 +145,7 @@ export default class Layout extends React.Component {
                     val={this.state.termsAndConditions}
                     inputHandler={this.textFieldHandler}
                     buttonHandler={this.buttonClick} />
+                    
             </div>
         )
     }
