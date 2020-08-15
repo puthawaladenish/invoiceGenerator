@@ -5,6 +5,7 @@ import ProductAndPrices from './ProductAndpricesListing';
 import FinalPrice from './FinalPrice';
 import DesriptionAndPrice from './InputDescriptionAndPrice';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 export default class Layout extends React.Component {
     constructor(props) {
@@ -17,20 +18,37 @@ export default class Layout extends React.Component {
             invoiceDescription: '',
             termsAndConditions: '',
             itemsListing: [],
-            descriptionVal:'',
-            priceVal:''
+            descriptionVal: '',
+            priceVal: ''
 
         }
         this.textFieldHandler = this.textFieldHandler.bind(this);
         this.buttonClick = this.buttonClick.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
-    buttonClick(){
-        this.setState((state,props)=>{
+
+    handleSubmit(event) {
+        //final Price
+        const currentItems = this.state.itemsListing;
+        let FinalPrice = 0;
+        currentItems.map((product, index) => {
+            Finalprice = Finalprice + product.price
+        });
+        const salesInvoice = {
+            
+        }
+
+        event.preventDefault();
+        console.log('You are to create new sales invoice');
+    }
+
+    buttonClick() {
+        this.setState((state, props) => {
             const currentArray = this.state.itemsListing;
-            return{
-                itemsListing : currentArray.concat([
+            return {
+                itemsListing: currentArray.concat([
                     {
-                        description:state.descriptionVal,
+                        description: state.descriptionVal,
                         price: parseFloat(state.priceVal)
                     }
                 ])
@@ -92,7 +110,7 @@ export default class Layout extends React.Component {
     }
     render() {
         return (
-            <div>
+            <Form onSubmit={this.handleSubmit}>
                 <CustomTextArea
                     label='Invoice Description'
                     name='invoiceDescription'
@@ -132,21 +150,27 @@ export default class Layout extends React.Component {
                     text="Enter the full customer Address" />
                 <ProductAndPrices
                     itemsListing={this.state.itemsListing} />
-                <DesriptionAndPrice 
+                <DesriptionAndPrice
                     descriptionVal={this.state.descriptionVal}
                     priceVal={this.state.priceVal}
                     customHandler={this.textFieldHandler}
-                    buttonHandler= {this.buttonClick}  />
-                <FinalPrice 
-                    itemsListing = {this.state.itemsListing} />
+                    buttonHandler={this.buttonClick} />
+                <FinalPrice
+                    itemsListing={this.state.itemsListing} />
                 <CustomTextArea
                     label='Terms and Conditions'
                     name='termsAndConditions'
                     val={this.state.termsAndConditions}
                     inputHandler={this.textFieldHandler}
                     buttonHandler={this.buttonClick} />
-                    
-            </div>
+                <Button
+                    type='submit'
+                    varient='primary'
+                    size='lg'>
+                    Create sales invoice
+                </Button>
+
+            </Form>
         )
     }
 }
