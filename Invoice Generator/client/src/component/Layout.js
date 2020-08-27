@@ -1,4 +1,8 @@
 import React from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
 import CustomTextField from './CustomTextField';
 import CustomTextArea from './CustomTextArea';
 import ProductAndPrices from './ProductAndpricesListing';
@@ -6,6 +10,9 @@ import FinalPrice from './FinalPrice';
 import DesriptionAndPrice from './InputDescriptionAndPrice';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import DialogWindow from './DialogWindow';
+import CustomCard from './CustomCard';
+import axios from 'axios';
 
 export default class Layout extends React.Component {
     constructor(props) {
@@ -19,31 +26,64 @@ export default class Layout extends React.Component {
             termsAndConditions: '',
             itemsListing: [],
             descriptionVal: '',
-            priceVal: ''
-
+            priceVal: '',
+            show: false,
+            title: '',
+            content: ''
         }
         this.textFieldHandler = this.textFieldHandler.bind(this);
         this.buttonClick = this.buttonClick.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.closeWindow = this.closeWindow.bind(this);
+    }
+    closeWindow() {
+        console.log('You want to close this dislog box.')
+        this.setState({
+            show: false
+        })
     }
 
     handleSubmit(event) {
         //final Price
         const currentItems = this.state.itemsListing;
-        let FinalPrice = 0;
+        let finalPrice = 0;
         currentItems.map((product, index) => {
-            Finalprice = Finalprice + product.price
+            finalPrice = finalPrice + product.price
         });
         const salesInvoice = {
-            
+            sellerName: this.state.sellerName,
+            sellerAddress: this.state.sellerAddress,
+            customerName: this.state.customerName,
+            customerAddress: this.state.customerAddress,
+            items: this.state.itemsListing,
+            finalPrice: finalPrice,
+            terms: this.state.termsAndConditions,
+            invoiceDescription: this.state.invoiceDescription,
         }
+        axios.post('http://localhost:5000/api/createinvoice', salesInvoice)
+            .then((res) => {
+                if (res.status === 200) {
+                    this.setState({
+                        show: true,
+                        title: 'Success!!',
+                        content: 'The Invoice was successfully Inserted'
+                    });
+                } else {
+                    this.setState({
+                        show: true,
+                        title: 'Error!!',
+                        content: 'Problem in creating in invoice - try again'
+                    });
+                }
+            });
 
         event.preventDefault();
         console.log('You are to create new sales invoice');
+
     }
 
     buttonClick() {
-        this.setState((state, props) => {
+        this.setState((state) => {
             const currentArray = this.state.itemsListing;
             return {
                 itemsListing: currentArray.concat([
@@ -111,65 +151,115 @@ export default class Layout extends React.Component {
     render() {
         return (
             <Form onSubmit={this.handleSubmit}>
-                <CustomTextArea
-                    label='Invoice Description'
-                    name='invoiceDescription'
-                    val={this.state.invoiceDescription}
-                    inputHandler={this.textFieldHandler} />
-                <CustomTextField
-                    customld='seller-name'
-                    label="Seller's name"
-                    placeholder='Type in the name...'
-                    name="sellerName"
-                    val={this.state.sellerName}
-                    inputHandler={this.textFieldHandler}
-                    text="Enter the full name" />
-                <CustomTextField
-                    customld='seller-address'
-                    label="Seller's Address"
-                    placeholder='Type in the address...'
-                    name="sellerAddress"
-                    val={this.state.sellerAddress}
-                    inputHandler={this.textFieldHandler}
-                    text="Enter the full address" />
-                <CustomTextField
-                    customld='customer-name'
-                    label="Customer's name"
-                    placeholder='Type in the customer-name...'
-                    name="customerName"
-                    val={this.state.customerName}
-                    inputHandler={this.textFieldHandler}
-                    text="Enter the full customer name" />
-                <CustomTextField
-                    customld='customer-address'
-                    label="Customer's Address"
-                    placeholder='Type in the customer Address...'
-                    name="customerAddress"
-                    val={this.state.customerAddress}
-                    inputHandler={this.textFieldHandler}
-                    text="Enter the full customer Address" />
-                <ProductAndPrices
-                    itemsListing={this.state.itemsListing} />
-                <DesriptionAndPrice
-                    descriptionVal={this.state.descriptionVal}
-                    priceVal={this.state.priceVal}
-                    customHandler={this.textFieldHandler}
-                    buttonHandler={this.buttonClick} />
-                <FinalPrice
-                    itemsListing={this.state.itemsListing} />
-                <CustomTextArea
-                    label='Terms and Conditions'
-                    name='termsAndConditions'
-                    val={this.state.termsAndConditions}
-                    inputHandler={this.textFieldHandler}
-                    buttonHandler={this.buttonClick} />
-                <Button
-                    type='submit'
-                    varient='primary'
-                    size='lg'>
-                    Create sales invoice
-                </Button>
+                <Container>
+                    <Row style={{ marginTop: '1em' }}>
+                        <Col>
+                            <CustomCard head="Invoice Description" >
+                                <CustomTextArea
+                                    label='Invoice Description'
+                                    name='invoiceDescription'
+                                    val={this.state.invoiceDescription}
+                                    inputHandler={this.textFieldHandler} />
+                            </CustomCard>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginTop: '1em' }}>
+                        <Col>
+                            <CustomCard head="Seller's Information">
+                                <CustomTextField
+                                    customld='seller-name'
+                                    label="Seller's name"
+                                    placeholder='Type in the name...'
+                                    name="sellerName"
+                                    val={this.state.sellerName}
+                                    inputHandler={this.textFieldHandler}
+                                    text="Enter the full name" />
+                                <CustomTextField
+                                    customld='seller-address'
+                                    label="Seller's Address"
+                                    placeholder='Type in the address...'
+                                    name="sellerAddress"
+                                    val={this.state.sellerAddress}
+                                    inputHandler={this.textFieldHandler}
+                                    text="Enter the full address" />
+                            </CustomCard>
+                        </Col>
+                        <Col>
+                            <CustomCard head="Customer's Information">
+                                <CustomTextField
+                                    customld='customer-name'
+                                    label="Customer's name"
+                                    placeholder='Type in the customer-name...'
+                                    name="customerName"
+                                    val={this.state.customerName}
+                                    inputHandler={this.textFieldHandler}
+                                    text="Enter the full customer name" />
+                                <CustomTextField
+                                    customld='customer-address'
+                                    label="Customer's Address"
+                                    placeholder='Type in the customer Address...'
+                                    name="customerAddress"
+                                    val={this.state.customerAddress}
+                                    inputHandler={this.textFieldHandler}
+                                    text="Enter the full customer Address" />
+                            </CustomCard>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginTop: '1em' }}>
+                        <Col>
+                            <CustomCard head='Items/Servicies Purchased'>
+                                <ProductAndPrices
+                                    itemsListing={this.state.itemsListing} />
+                                <DesriptionAndPrice
+                                    descriptionVal={this.state.descriptionVal}
+                                    priceVal={this.state.priceVal}
+                                    customHandler={this.textFieldHandler}
+                                    buttonHandler={this.buttonClick} />
+                            </CustomCard>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginTop: '1em' }}>
+                        <Col>
+                            <CustomCard head='Final Price'>
+                                <FinalPrice
+                                    itemsListing={this.state.itemsListing} />
+                            </CustomCard>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginTop: '1em' }}>
+                        <Col>
+                        <CustomCard head='Terms and condition'>
+                            <CustomTextArea
+                                label='Terms and Conditions'
+                                name='termsAndConditions'
+                                val={this.state.termsAndConditions}
+                                inputHandler={this.textFieldHandler}
+                                buttonHandler={this.buttonClick} />
+                                </CustomCard>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                        <Card>
+                            <Card.Body>
+                            <Button
+                                type='submit'
+                                varient='primary'
+                                size='lg'>
+                                Create sales invoice
+                            </Button>
+                            </Card.Body>
+                        </Card>
+                            
+                        </Col>
+                    </Row>
+                </Container>
 
+                <DialogWindow
+                    show={this.state.show}
+                    title={this.state.title}
+                    content={this.state.content}
+                    closeHandler={this.closeWindow} />
             </Form>
         )
     }

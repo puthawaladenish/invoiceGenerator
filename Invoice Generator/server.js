@@ -44,5 +44,5 @@ app.get('*',(req,res) => {
 
 //port
 app.listen(5000,()=>{
-    console.log('Listening at localhost : 3000')
+    console.log('Listening at localhost : 5000')
 });
