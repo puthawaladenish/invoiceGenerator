@@ -238,7 +238,7 @@ export default class Layout extends React.Component {
                                 </CustomCard>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row style={{ marginTop: '1em' }}>
                         <Col>
                         <Card>
                             <Card.Body>
