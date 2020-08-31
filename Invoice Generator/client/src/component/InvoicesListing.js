@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import InvoicesTable from './InvoicesTable';
 
 export default class InvoicesListing extends React.Component {
     constructor(props) {
@@ -7,7 +8,13 @@ export default class InvoicesListing extends React.Component {
         this.state = {
             invoiceData: []
         }
+        this.deleteHandler=this.deleteHandler.bind(this);
     }
+
+    deleteHandler(invoiceId){
+        console.log('Delete Invoice id:'+invoiceId)
+    }
+
     componentDidMount() {
         //this method runs autometically 
         axios.get('http://localhost:5000/api/readinvoice/all')
@@ -38,7 +45,9 @@ export default class InvoicesListing extends React.Component {
         }
         render() {
         return (
-            <h1> Hello from Invoices Listing!!!</h1>
+            <InvoicesTable 
+            invoiceData={this.state.invoicesData}
+            handelDelete={this.deleteHandler} />
         );
     }
 }
