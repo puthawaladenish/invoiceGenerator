@@ -4,36 +4,42 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ViewInvoiceButton from './ViewInvoiceButton';
 
-export default class InvoicesTable extends React.Component{
-    constructor(props){
+export default class InvoicesTable extends React.Component {
+    constructor(props) {
         super(props);
     }
-    render(){
+    render() {
         const idsAndDescription = this.props.invoicesData;
-        let htmlMarkup = [];
-        idsAndDescription.map((invoice,index)=>{
-            htmlMarkup.push(
-                <Row key={'index-'+index}>
-                    <Col>
-                        <h5>{invoice.id}</h5>
-                    </Col>
-                    <Col>
-                        <h5>{invoice.description}</h5>
-                    </Col>
-                    <Col>
-                        <ButtonGroup>
-                            <Button
-                            varient = 'danger'
-                            onClick={()=>this.props.handleDelete(invoice.id)} >
-                                Delete
-                            </Button>
-                        </ButtonGroup>
-                    </Col>
-                </Row>
+        const htmlMarkup = [];
+        if (idsAndDescription.length > 0) {
+            idsAndDescription.map((invoice, index) => {
+                htmlMarkup.push(
+                    <Row key={'index-' + index}>
+                        <Col>
+                            <h5>{invoice.id}</h5>
+                        </Col>
+                        <Col>
+                            <h5>{invoice.description}</h5>
+                        </Col>
+                        <Col>
+                            <ButtonGroup>
+                                <Button
+                                    varient='danger'
+                                    onClick={() => this.props.handleDelete(invoice.id)} >
+                                    Delete
+                                   </Button>
+                                <ViewInvoiceButton
+                                    invoiceId={invoice.id} />
+                            </ButtonGroup>
+                        </Col>
+                    </Row>
+                );
+            }
             );
-        });
-        return(
+        }
+        return (
             <Container>
                 <Row>
                     <Col>
@@ -46,7 +52,7 @@ export default class InvoicesTable extends React.Component{
                         <h4>Actions</h4>
                     </Col>
                 </Row>
-                {htmlMarkup}
+                <div>{htmlMarkup}</div>
             </Container>
         );
     }

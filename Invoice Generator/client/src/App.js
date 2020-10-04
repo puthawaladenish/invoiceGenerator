@@ -26,7 +26,7 @@ class App extends React.Component {
           <Route exact path="/updateinvoice">
             <LoadUpdateInvoice />
           </Route>
-          <Route exact path="/loaddisplayinvoice">
+          <Route exact path="/loaddisplayinvoice/:invoiceId">
             <LoadDisplayInvoice />
           </Route>
           <Route exact path="/allinvoices">
